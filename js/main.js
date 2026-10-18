@@ -1485,3 +1485,21 @@ function uglyHider(linker) {
         window.top.$('#settingsBody').toggle();
     }
 }
+// Functions called from inline onclick/onchange attributes. The minified build
+// (main.min.js) renames or drops functions it only sees inside strings, so expose
+// them on the page window explicitly.
+window.top.applySettings = applySettings;
+window.top.resetTable = resetTable;
+window.top.changeProfile = changeProfile;
+window.top.createProfile = createProfile;
+window.top.setDefaultProfile = setDefaultProfile;
+window.top.deleteProfile = deleteProfile;
+window.top.updateProfile = updateProfile;
+window.top.exportProfile = exportProfile;
+window.top.importProfile = importProfile;
+window.top.loadLanguage = loadLanguage;
+window.top.setKeyEditMode = setKeyEditMode;
+window.top.updateKeypressSettings = updateKeypressSettings;
+window.top.uglyHider = uglyHider;
+window.top.customSendUnits = customSendUnits;
+window.top.customSendUnitsFromReport = customSendUnitsFromReport;

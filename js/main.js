@@ -95,13 +95,13 @@ var keyPressSettings = {
     "priorityThreeButton": "Skip",
     "defaultButton": "Skip"
 };
-var availableLangs = ["en", "es", "el", "ar", "it", "sk"];
+var availableLangs = ["en", "es", "el", "ar", "it", "sk", "tr", "de", "fr", "hr", "sv"];
 window.top.$.getScript(scriptURL + 'lib/jstorage.js', function () {
     window.top.$.getScript(scriptURL + "resources.js", function () {
         if (window.top.$.jStorage.get("language") == null) {
             setDefaultLanguage();
         }
-        window.top.$.getScript(scriptURL + "lang/" + window.top.$.jStorage.get("language") + '.js', function () {
+        loadLanguageFiles(window.top.$.jStorage.get("language"), function () {
             console.log("init");
             checkPage();
         });
@@ -1321,6 +1321,9 @@ function setDefaultLanguage() {
         case"divoke-kmene.sk":
             window.top.$.jStorage.set("language", "sk");
             break;
+        case"klanlar.org":
+            window.top.$.jStorage.set("language", "tr");
+            break;
         default:
             window.top.$.jStorage.set("language", "en");
             break;
@@ -1330,17 +1333,23 @@ function loadLanguage(lang) {
     window.top.$.jStorage.set("language", lang);
     var profileList = window.top.$.jStorage.get("profileList");
     var defaultProfile = window.top.$.jStorage.get("profile:" + profile_10);
-    if (window.top.$.inArray(lang, availableLangs) < 0) {
-        lang = "en";
-    }
-    var langFile = scriptURL + "lang/" + lang + ".js";
-    window.top.$.getScript(langFile, function () {
+    loadLanguageFiles(lang, function () {
         window.top.$('#settingsDiv').remove();
         profileList[0] = profile_10;
         window.top.$.jStorage.set("profileList", profileList);
         window.top.$.jStorage.set("profile:" + profile_10, defaultProfile);
         changeHeader(filter_40);
         showSettings();
+    });
+}
+// English is always loaded first so strings missing from a partial translation fall back to it.
+function loadLanguageFiles(lang, callback) {
+    window.top.$.getScript(scriptURL + "lang/en.js", function () {
+        if (lang == "en" || window.top.$.inArray(lang, availableLangs) < 0) {
+            callback();
+        } else {
+            window.top.$.getScript(scriptURL + "lang/" + lang + ".js", callback);
+        }
     });
 }
 function addLanguages() {
@@ -1350,6 +1359,11 @@ function addLanguages() {
     window.top.$('#language').append("<option value='es'>Español</option>");
     window.top.$('#language').append("<option value='ar'>اللغة العربية</option>");
     window.top.$('#language').append("<option value='sk'>Slovenčina</option>");
+    window.top.$('#language').append("<option value='tr'>Türkçe</option>");
+    window.top.$('#language').append("<option value='de'>Deutsch</option>");
+    window.top.$('#language').append("<option value='fr'>Français</option>");
+    window.top.$('#language').append("<option value='hr'>Hrvatski</option>");
+    window.top.$('#language').append("<option value='sv'>Svenska</option>");
 }
 function parseBool(value) {
     return (typeof value === "undefined") ? false : value.replace(/^\s+|\s+window.top.$/g, "").toLowerCase() === "true";

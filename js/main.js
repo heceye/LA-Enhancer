@@ -700,8 +700,8 @@ function scoutReportSettings(cell, profileArray) {
 }
 function wallSettings(cell, profileArray) {
     if (profileArray[s.enable_walls]) {
-        var wallLvl = parseInt(cell.html());
-        if (wallLvl == '?') {
+        var wallLvl = parseInt(cell.html(), 10);
+        if (isNaN(wallLvl)) {
             wallLvl = 0;
         }
         switch (window.top.$.trim(profileArray[s.wall_operator])) {
@@ -1140,8 +1140,11 @@ function doTime(millsec) {
     }, millsec);
 }
 function editKey(e) {
-    if ((e.keyCode <= 37 && e.keyCode >= 40) || (e.keyCode <= 48 && e.keyCode >= 90)) {
-        window.top.UI.ErrorMessage("You can only enter letters, numbers, or arrows. Plese try another key.", 1500);
+    var isArrow = e.keyCode >= 37 && e.keyCode <= 40;
+    var isDigit = e.keyCode >= 48 && e.keyCode <= 57;
+    var isLetter = e.keyCode >= 65 && e.keyCode <= 90;
+    if (!(isArrow || isDigit || isLetter)) {
+        window.top.UI.ErrorMessage("You can only enter letters, numbers, or arrows. Please try another key.", 1500);
     } else {
         var keyToChar = String.fromCharCode(e.keyCode);
         if (e.keyCode == 37) {
